@@ -78,8 +78,8 @@ function CriarTabela(obj) {
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
       + '<td class="align-middle d-flex justify-content-lg-center">'
-      + '<button class="btn bg-gradient-success my-2 mx-1">Editar</button>'
-      + '<button class="btn bg-gradient-danger my-2 mx-1">Excluir</button></td></tr>';
+      + '<button class="btn bg-gradient-success my-2 mx-1" value=" ' + linha.identificador + ' ">Editar</button>'
+      + '<button class="btn bg-gradient-danger my-2 mx-1" value=" ' + linha.identificador + ' ">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
@@ -156,8 +156,7 @@ function CriarObjetoDemanda() {
     tipoDemanda: $("#tipoDemanda").val(),
     complexidadeHoras: $("#complexidadeHoras").val(),
     statusDemanda: $("#statusDemanda").val(),
-    idDesenvolvedor: $("#idDesenvolvedor").val(),
-    idAvaliação: $("#idAvaliacao").val()
+    idDesenvolvedor: $("#idDesenvolvedor").val()
 
   };
   console.log(demanda)
