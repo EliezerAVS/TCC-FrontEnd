@@ -4,35 +4,43 @@ $(document).ready(function () {
   // Abrir modal na página carregada
   $("#cadastrarDemanda").click(function () {
     $("#tituloModal").html("Nova Demanda");
-    $("#modalCadastrarDemanda").modal('show');
+    $("#modalDemanda").modal('show');
   });
 
   // Fechar modal clicando no botão
-  $("#modalCloseCadastrarDemanda").click(function () {
-    $("#modalCadastrarDemanda").modal('hide');
-  });
-  $("#cancelarCadastrarDemanda").click(function () {
-    $("#modalCadastrarDemanda").modal('hide');
+  $(".cancelarDemanda").click(function () {
+    $("#modalDemanda").modal('hide');
   });
 });
 
 //Modal Atualizar Demanda
-$(document).ready(function () {
-  // Abrir modal na página carregada
-  $("#atualizarDemanda").click(function () {
+function EditarDados() {
+  $(document).ready(function () {
+    // Abrir modal na página carregada
     $("#tituloModal").html("Atualizar Demanda");
-    $("#modalAtualizarDemanda").modal('show');
-  });
+    $("#modalDemanda").modal('show');
 
-  // Fechar modal clicando no botão
-  $("#modalCloseAtualizarDemanda").click(function () {
-    $("#modalAtualizarDemanda").modal('hide');
+    // Fechar modal clicando no botão
+    $(".cancelarDemanda").click(function () {
+      $("#modalDemanda").modal('hide');
+    });
   });
-  $("#cancelarAtualizarDemanda").click(function () {
-    $("#modalAtualizarDemanda").modal('hide');
-  });
-});
+}
 
+//Exibir dados nos inputs para atualizar
+function ExibirDadosInput(dados) {
+  EditarDados();
+
+  var linha = $(dados).parents("tr");
+  var coluna = linha.children("td");
+  $("#nomeDemanda").val($(coluna[0]).text());
+  $("#inicioAtendimento").val($(coluna[1]).text());
+  $("#fimAtendimento").val($(coluna[2]).text());
+  $("#tipoDemanda").val($(coluna[3]).text());
+  $("#complexidadeHoras").val($(coluna[4]).text());
+  $("#statusDemanda").val($(coluna[5]).text());
+  $("#idDesenvolvedor").val($(coluna[6]).text());
+}
 
 $.ajax({
   method: "GET",
@@ -78,8 +86,8 @@ function CriarTabela(obj) {
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
       + '<td class="align-middle d-flex justify-content-lg-center">'
-      + '<button class="btn bg-gradient-success my-2 mx-1" value=" ' + linha.identificador + ' ">Editar</button>'
-      + '<button class="btn bg-gradient-danger my-2 mx-1" value=" ' + linha.identificador + ' ">Excluir</button></td></tr>';
+      + '<button class="btn bg-gradient-success my-2 mx-1" onclick="ExibirDadosInput(this)">Editar</button>'
+      + '<button class="btn bg-gradient-danger my-2 mx-1">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
@@ -139,10 +147,10 @@ function CriarSelect() {
     // console.log(linha);
   });
 
-  $("#selectIdDesenvolvedor").html(texto);
+  $("#idDesenvolvedor").html(texto);
 }
 
-$('#salvarCadastrarDemanda').submit(function (e) {
+$('#salvarDemanda').submit(function (e) {
   e.preventDefault()
   CadastrarDemanda()
 });

@@ -17531,7 +17531,7 @@ pre[class*="language-"] {
   .ps {
     overflow: auto !important; } }
 
-#selectStatus, #selectIdDesenvolvedor {
+#statusDemanda, #idDesenvolvedor {
   background-color: #212840;
 }
 /*# sourceMappingURL=material-dashboard.css.map */
