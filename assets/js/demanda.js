@@ -5,6 +5,13 @@ $(document).ready(function () {
   $("#cadastrarDemanda").click(function () {
     $("#tituloModal").html("Nova Demanda");
     $("#modalDemanda").modal('show');
+    ListarDesenvolvedores();
+    
+    //Salvar dados cadastro
+    $('#salvarDemanda').submit(function (e) {
+      e.preventDefault();
+      CadastrarDemanda();
+    });
   });
 
   // Fechar modal clicando no botão
@@ -19,6 +26,13 @@ function EditarDados() {
     // Abrir modal na página carregada
     $("#tituloModal").html("Atualizar Demanda");
     $("#modalDemanda").modal('show');
+    ListarDesenvolvedores();
+    
+    //Salvar dados atualização
+    $('#salvarDemanda').submit(function (e) {
+      e.preventDefault();
+      AtualizarDemanda();
+    });
 
     // Fechar modal clicando no botão
     $(".cancelarDemanda").click(function () {
@@ -87,7 +101,7 @@ function CriarTabela(obj) {
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
       + '<td class="align-middle d-flex justify-content-lg-center">'
       + '<button class="btn bg-gradient-success my-2 mx-1" onclick="ExibirDadosInput(this)">Editar</button>'
-      + '<button class="btn bg-gradient-danger my-2 mx-1">Excluir</button></td></tr>';
+      + '<button class="btn bg-gradient-danger my-2 mx-1" onclick="DeletarDemanda(this)">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
@@ -103,7 +117,6 @@ function AtualizarDemanda() {
     dataType: "json"
   }).done(function (resposta) {
     console.log(resposta);
-    PegarId(resposta);
   }).fail(function (details, error) {
     console.log(err);
     alert();
@@ -116,14 +129,14 @@ function AtualizarDemanda() {
   });
 }
 
-$('#cadastrarDemanda').submit(function (e) {
-  e.preventDefault()
-  ListarDesenvolvedores()
-});
+// $('#cadastrarDemanda').submit(function (e) {
+//   e.preventDefault()
+//   ListarDesenvolvedores()
+// });
 function ListarDesenvolvedores() {
   $.ajax({
     method: "GET",
-    url: "http://alunodv03:1013/v1/ListarDesenvolvedores",
+    url: "http://alunodv03:1013/V1/ListaDesenvolvedores",
     dataType: "json"
   }).done(function (resposta) {
     console.log(resposta);
@@ -143,17 +156,17 @@ function CriarSelect() {
   var texto;
 
   $(obj).each(function (index, linha) {
-    texto += '<option value="' + linha.identificador + '">' + linha.identificador + '</option>'
+    texto += '<option value="' + linha.identificador + '">' + linha.identificador + '</option>';
     // console.log(linha);
   });
 
   $("#idDesenvolvedor").html(texto);
 }
 
-$('#salvarDemanda').submit(function (e) {
-  e.preventDefault()
-  CadastrarDemanda()
-});
+// $('#salvarDemanda').submit(function (e) {
+//   e.preventDefault()
+//   CadastrarDemanda()
+// });
 
 function CriarObjetoDemanda() {
   var demanda = {
@@ -173,8 +186,8 @@ function CriarObjetoDemanda() {
 
 function CadastrarDemanda() {
   if ($('#formulario-cadastro-demanda').parsley().validate()) {
-    var objDemanda = CriarObjetoDemanda()
-    var jsonDemanda = JSON.stringify(objDemanda)
+    var objDemanda = CriarObjetoDemanda();
+    var jsonDemanda = JSON.stringify(objDemanda);
 
     $.ajax({
       method: "POST",
@@ -199,4 +212,23 @@ function CadastrarDemanda() {
       console.log(error)
     });
   }
+}
+
+function DeletarDemanda() {
+  $.ajax({
+    method: "DELETE",
+    url: "http://alunodv03:1012/v1/DeletarDemanda",
+    dataType: "json"
+  }).done(function (resposta) {
+    console.log(resposta);
+  }).fail(function (details, error) {
+    console.log(err);
+    alert();
+    swal.fire(
+      'Erro',
+      details.responseText,
+      'error'
+    );
+    console.log(error);
+  });
 }
