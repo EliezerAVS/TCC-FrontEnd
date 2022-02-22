@@ -1,4 +1,3 @@
-
 //Modal Cadastrar Demanda
 $(document).ready(function () {
   // Abrir modal na página carregada
@@ -65,10 +64,10 @@ $.ajax({
   url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
   dataType: "json"
 }).done(function (resposta) {
-  console.log(resposta);
+  // console.log(resposta);
   CriarTabela(resposta);
 }).fail(function (details, error) {
-  console.log(err);
+  console.log(details);
   alert();
   swal.fire(
     'Erro',
@@ -109,7 +108,7 @@ function CriarTabela(obj) {
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
       + '<td class="align-middle d-flex justify-content-lg-center">'
       + '<button class="btn bg-gradient-success my-2 mx-1" onclick="ExibirDadosInput(this)">Editar</button>'
-      + '<button class="btn bg-gradient-danger my-2 mx-1" onclick="DeletarDemanda(this)">Excluir</button></td></tr>';
+      + '<button class="btn bg-gradient-danger my-2 mx-1" onclick="DeletarDemanda(' + linha.identificador + ')">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
@@ -129,10 +128,15 @@ function AtualizarDemanda() {
       data: jsonDemanda,
       contentType: "application/json"
     }).done(function (resposta) {
-      console.log(resposta);
+      // console.log(resposta);
+      Swal.fire(
+        'Feito!',
+        'Demanda atualizada com sucesso!',
+        'success'
+      );
     }).fail(function (details, error) {
-      console.log(err);
-      alert();
+      console.log(details);
+      // alert();
       swal.fire(
         'Erro',
         details.responseText,
@@ -149,11 +153,11 @@ function ListarDesenvolvedores() {
     url: "https://apidesenvolvedor.aiur.com.br/V1/ListaDesenvolvedores",
     dataType: "json"
   }).done(function (resposta) {
-    console.log(resposta);
+    // console.log(resposta);
     CriarSelect(resposta);
   }).fail(function (details, error) {
-    console.log(err);
-    alert();
+    console.log(details);
+    // alert();
     swal.fire(
       'Erro',
       details.responseText,
@@ -200,35 +204,40 @@ function CadastrarDemanda() {
       data: jsonDemanda,
       contentType: "application/json"
     }).done(function (resposta) {
-      console.log(resposta)
+      // console.log(resposta);
       Swal.fire(
         'Feito!',
-        'Cliente demanda cadastrada com sucesso',
+        'Demanda cadastrada com sucesso!',
         'success'
-      )
+      );
     }).fail(function (details, error) {
-      console.log(details)
-      // alert()
+      console.log(details);
+      // alert();
       Swal.fire(
         'Erro!',
         details.responseText,
         'error'
       );
-      console.log(error)
+      console.log(error);
     });
   }
 }
 
-function DeletarDemanda() {
+function DeletarDemanda(id) {
   $.ajax({
     method: "DELETE",
-    url: "http://apidemandas.aiur.com.br/v1/DeletarDemanda",
+    url: "http://apidemandas.aiur.com.br/v1/DeletarDemanda?idDemanda=" + id,
     dataType: "json"
   }).done(function (resposta) {
-    console.log(resposta);
+    // console.log(resposta);
+    Swal.fire(
+      'Feito!',
+      'Demanda deletada com sucesso!',
+      'success'
+    );
   }).fail(function (details, error) {
-    console.log(err);
-    alert();
+    console.log(details);
+    // alert();
     swal.fire(
       'Erro',
       details.responseText,
