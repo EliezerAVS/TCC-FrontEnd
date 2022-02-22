@@ -381,8 +381,9 @@ table.dataTable td {
   border:1px solid #aaa;
   border-radius:3px;
   padding:5px;
-  background-color:transparent;
-  padding:4px
+  background-color: #212840;
+  padding:4px;
+  color: #fff;
 }
 
 .dataTables_wrapper .dataTables_filter {
@@ -500,7 +501,7 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_info,
 .dataTables_wrapper .dataTables_processing,
 .dataTables_wrapper .dataTables_paginate {
-  color:#333
+  color:#fff
 }
 
 .dataTables_wrapper .dataTables_scroll {

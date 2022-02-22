@@ -213,11 +213,11 @@
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-text font-weight-bolder m-0 mt-1 p-2">Início do Atendimento:<span>&emsp;&nbsp;</span></label>
-                  <input type="datetime-local" class="form-control modal-field text-white" id="inicioAtendimento" required>
+                  <input type="datetime-local" class="form-control modal-field text-white" id="inicioAtendimento">
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-text font-weight-bolder m-0 mt-1 p-2">Término do Atendimento:</label>
-                  <input type="datetime-local" class="form-control modal-field text-white" id="fimAtendimento" required>
+                  <input type="datetime-local" class="form-control modal-field text-white" id="fimAtendimento">
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-text font-weight-bolder m-0 mt-1 p-2">Tipo de Demanda:<span>&emsp;&emsp;&emsp;&nbsp;</span></label>
@@ -241,7 +241,8 @@
                   <select class="form-select modal-field text-white" id="idDesenvolvedor" required></select>
                 </div>
                 <footer class="modal-footer">
-                  <button class="btn bg-gradient-success my-2 mx-1" id="salvarDemanda">Salvar</button>
+                  <button class="btn bg-gradient-success my-2 mx-1 submit" id="salvarDemanda">Salvar</button>
+                  <button class="btn bg-gradient-success my-2 mx-1 submit" id="atualizarDemanda">Atualizar</button>
                   <button class="btn bg-gradient-danger my-2 mx-1 cancelarDemanda" type="reset">Cancelar</button>
                 </footer>
               </form>

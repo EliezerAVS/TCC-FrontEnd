@@ -17534,4 +17534,8 @@ pre[class*="language-"] {
 #statusDemanda, #idDesenvolvedor {
   background-color: #212840;
 }
+
+.modal-footer button.submit {
+  display: none;
+}
 /*# sourceMappingURL=material-dashboard.css.map */

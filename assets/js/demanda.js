@@ -5,6 +5,8 @@ $(document).ready(function () {
   $("#cadastrarDemanda").click(function () {
     $("#tituloModal").html("Nova Demanda");
     $("#modalDemanda").modal('show');
+    $('#salvarDemanda').show();
+    $('#atualizarDemanda').hide();
     ListarDesenvolvedores();
     
     //Salvar dados cadastro
@@ -26,10 +28,12 @@ function EditarDados() {
     // Abrir modal na página carregada
     $("#tituloModal").html("Atualizar Demanda");
     $("#modalDemanda").modal('show');
+    $('#atualizarDemanda').show();
+    $('#salvarDemanda').hide();
     ListarDesenvolvedores();
     
     //Salvar dados atualização
-    $('#salvarDemanda').submit(function (e) {
+    $('#atualizarDemanda').submit(function (e) {
       e.preventDefault();
       AtualizarDemanda();
     });
@@ -58,7 +62,7 @@ function ExibirDadosInput(dados) {
 
 $.ajax({
   method: "GET",
-  url: "http://alunodv03:1012/v1/ListarDemandas",
+  url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
   dataType: "json"
 }).done(function (resposta) {
   console.log(resposta);
@@ -88,9 +92,13 @@ function CriarTabela(obj) {
     texto += '<tr><td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<h6 class="mb-0 text-sm">' + linha.nomeDemanda + '</h6></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
-      + '<p class="text-xs text-secondary mb-0">' + (linha.inicioAtendimento).replace('T', ' | ') + '</p></div></div></td>'
+      + '<p class="text-xs text-secondary mb-0">'
+        + (linha.inicioAtendimento != null ? (linha.inicioAtendimento).replace('T', ' | ') : linha.inicioAtendimento)
+        + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
-      + '<p class="text-xs text-secondary mb-0">' + (linha.fimAtendimento).replace('T', ' | ') + '</p></div></div></td>'
+      + '<p class="text-xs text-secondary mb-0">'
+        + (linha.fimAtendimento != null ? (linha.fimAtendimento).replace('T', ' | ') : linha.fimAtendimento)
+        + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.tipoDemanda + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
@@ -111,36 +119,38 @@ function CriarTabela(obj) {
 }
 
 function AtualizarDemanda() {
-  $.ajax({
-    method: "PUT",
-    url: "http://alunodv03:1012/v1/AtualizarDemanda",
-    dataType: "json"
-  }).done(function (resposta) {
-    console.log(resposta);
-  }).fail(function (details, error) {
-    console.log(err);
-    alert();
-    swal.fire(
-      'Erro',
-      details.responseText,
-      'error'
-    );
-    console.log(error);
-  });
+  if ($('#formulario-cadastro-demanda').parsley().validate()) {
+    var objDemanda = CriarObjetoDemanda();
+    var jsonDemanda = JSON.stringify(objDemanda);
+  
+    $.ajax({
+      method: "PUT",
+      url: "http://apidemandas.aiur.com.br/v1/AtualizarDemanda",
+      data: jsonDemanda,
+      contentType: "application/json"
+    }).done(function (resposta) {
+      console.log(resposta);
+    }).fail(function (details, error) {
+      console.log(err);
+      alert();
+      swal.fire(
+        'Erro',
+        details.responseText,
+        'error'
+      );
+      console.log(error);
+    });
+  }
 }
 
-// $('#cadastrarDemanda').submit(function (e) {
-//   e.preventDefault()
-//   ListarDesenvolvedores()
-// });
 function ListarDesenvolvedores() {
   $.ajax({
     method: "GET",
-    url: "http://alunodv03:1013/V1/ListaDesenvolvedores",
+    url: "https://apidesenvolvedor.aiur.com.br/V1/ListaDesenvolvedores",
     dataType: "json"
   }).done(function (resposta) {
     console.log(resposta);
-    CriarTabela(resposta);
+    CriarSelect(resposta);
   }).fail(function (details, error) {
     console.log(err);
     alert();
@@ -152,21 +162,16 @@ function ListarDesenvolvedores() {
     console.log(error);
   });
 }
-function CriarSelect() {
+function CriarSelect(obj) {
   var texto;
 
   $(obj).each(function (index, linha) {
-    texto += '<option value="' + linha.identificador + '">' + linha.identificador + '</option>';
+    texto += '<option value="' + linha.identificador + '">' + linha.identificador + ' - ' + linha.nomeDesenvolvedor + '</option>';
     // console.log(linha);
   });
 
   $("#idDesenvolvedor").html(texto);
 }
-
-// $('#salvarDemanda').submit(function (e) {
-//   e.preventDefault()
-//   CadastrarDemanda()
-// });
 
 function CriarObjetoDemanda() {
   var demanda = {
@@ -191,7 +196,7 @@ function CadastrarDemanda() {
 
     $.ajax({
       method: "POST",
-      url: "http://alunodv03:1012/v1/CadastrarDemanda",
+      url: "http://apidemandas.aiur.com.br/v1/CadastrarDemanda",
       data: jsonDemanda,
       contentType: "application/json"
     }).done(function (resposta) {
@@ -217,7 +222,7 @@ function CadastrarDemanda() {
 function DeletarDemanda() {
   $.ajax({
     method: "DELETE",
-    url: "http://alunodv03:1012/v1/DeletarDemanda",
+    url: "http://apidemandas.aiur.com.br/v1/DeletarDemanda",
     dataType: "json"
   }).done(function (resposta) {
     console.log(resposta);
