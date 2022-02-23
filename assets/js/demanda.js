@@ -1,14 +1,15 @@
-//Modal Cadastrar Demanda
+// ===================================================================== //
+// ===== MODAL ========================================================= //
+// ===================================================================== //
+
+// Modal Cadastrar Demanda
 $(document).ready(function () {
   // Abrir modal na página carregada
   $("#cadastrarDemanda").click(function () {
-    $("#tituloModal").html("Nova Demanda");
-    $("#modalDemanda").modal('show');
-    $('#salvarDemanda').show();
-    $('#atualizarDemanda').hide();
+    $("#modalCadastarDemanda").modal('show');
     ListarDesenvolvedores();
     
-    //Salvar dados cadastro
+    // Salvar dados cadastro
     $('#salvarDemanda').submit(function (e) {
       e.preventDefault();
       CadastrarDemanda();
@@ -17,21 +18,18 @@ $(document).ready(function () {
 
   // Fechar modal clicando no botão
   $(".cancelarDemanda").click(function () {
-    $("#modalDemanda").modal('hide');
+    $("#modalCadastarDemanda").modal('hide');
   });
 });
 
-//Modal Atualizar Demanda
+// Modal Atualizar Demanda
 function EditarDados() {
   $(document).ready(function () {
     // Abrir modal na página carregada
-    $("#tituloModal").html("Atualizar Demanda");
-    $("#modalDemanda").modal('show');
-    $('#atualizarDemanda').show();
-    $('#salvarDemanda').hide();
+    $("#modalAtualizarDemanda").modal('show');
     ListarDesenvolvedores();
     
-    //Salvar dados atualização
+    // Salvar dados atualização
     $('#atualizarDemanda').submit(function (e) {
       e.preventDefault();
       AtualizarDemanda();
@@ -39,29 +37,18 @@ function EditarDados() {
 
     // Fechar modal clicando no botão
     $(".cancelarDemanda").click(function () {
-      $("#modalDemanda").modal('hide');
+      $("#modalAtualizarDemanda").modal('hide');
     });
   });
 }
 
-//Exibir dados nos inputs para atualizar
-function ExibirDadosInput(dados) {
-  EditarDados();
-
-  var linha = $(dados).parents("tr");
-  var coluna = linha.children("td");
-  $("#nomeDemanda").val($(coluna[0]).text());
-  $("#inicioAtendimento").val($(coluna[1]).text());
-  $("#fimAtendimento").val($(coluna[2]).text());
-  $("#tipoDemanda").val($(coluna[3]).text());
-  $("#complexidadeHoras").val($(coluna[4]).text());
-  $("#statusDemanda").val($(coluna[5]).text());
-  $("#idDesenvolvedor").val($(coluna[6]).text());
-}
+// ===================================================================== //
+// ===== LISTAR DEMANDAS =============================================== //
+// ===================================================================== //
 
 $.ajax({
   method: "GET",
-  url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
+  url: "http://5.161.81.202:8080/v1/ListarDemandas",
   dataType: "json"
 }).done(function (resposta) {
   // console.log(resposta);
@@ -78,26 +65,50 @@ $.ajax({
 });
 function CriarTabela(obj) {
   var texto = '<thead><tr>'
+    + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID da Demanda</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome da Demanda</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Início do Atendimento</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Término do Atendimento</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tipo da Demanda</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Complexidade Horas</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status da Demanda</th>'
-    + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID do Desenvolvedor</th>'
+    + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Dev</th>'
     + '<th></th></tr></thead><tbody>';
 
   $(obj).each(function (index, linha) {
+    // Formatando data e hora
+    var options = {     
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    }
+    
+    // Evitando problemas com valores nulos para as datas
+    var dateInicio;
+    var dateFim;
+    
+    if(linha.inicioAtendimento != undefined) {
+       dateInicio = new Date(linha.inicioAtendimento).toLocaleDateString('pt-BR', options);
+    }else {
+      dateInicio = "Indefinido";
+    }
+    if(linha.fimAtendimento != undefined) {
+      dateFim = new Date(linha.fimAtendimento).toLocaleDateString('pt-BR', options);
+    }else {
+      dateFim = "Indefinido";
+    }
+
     texto += '<tr><td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
-      + '<h6 class="mb-0 text-sm">' + linha.nomeDemanda + '</h6></div></div></td>'
+      + '<p class="mb-0 text-sm">' + linha.identificador + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
-      + '<p class="text-xs text-secondary mb-0">'
-        + (linha.inicioAtendimento != null ? (linha.inicioAtendimento).replace('T', ' | ') : linha.inicioAtendimento)
-        + '</p></div></div></td>'
+      + '<p class="mb-0 text-sm">' + linha.nomeDemanda + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
-      + '<p class="text-xs text-secondary mb-0">'
-        + (linha.fimAtendimento != null ? (linha.fimAtendimento).replace('T', ' | ') : linha.fimAtendimento)
-        + '</p></div></div></td>'
+      + '<p class="text-xs text-secondary mb-0">' + dateInicio + '</p></div></div></td>'
+      + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
+      + '<p class="text-xs text-secondary mb-0">' + dateFim + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.tipoDemanda + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
@@ -106,9 +117,10 @@ function CriarTabela(obj) {
       + '<p class="text-xs text-secondary mb-0">' + linha.statusDemanda + '</p></div></div></td>'
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
-      + '<td class="align-middle d-flex justify-content-lg-center">'
-      + '<button class="btn bg-gradient-success my-2 mx-1" onclick="ExibirDadosInput(this)">Editar</button>'
-      + '<button class="btn bg-gradient-danger my-2 mx-1" onclick="DeletarDemanda(' + linha.identificador + ')">Excluir</button></td></tr>';
+      + '<td class="align-middle d-flex flex-column justify-content-lg-center">'
+      + '<button class="btn bg-gradient-warning mx-1" id="avaliacao" onclick="">Avaliação</button>'
+      + '<button class="btn bg-gradient-success mx-1" id="editarDemanda" onclick="ExibirDadosInput(this)">Editar</button>'
+      + '<button type="submit" class="btn bg-gradient-danger mx-1" id="excluirDemanda" onclick="DeletarDemanda(' + linha.identificador + ')">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
@@ -117,65 +129,9 @@ function CriarTabela(obj) {
   $("#registroDemanda").DataTable();
 }
 
-function AtualizarDemanda() {
-  if ($('#formulario-cadastro-demanda').parsley().validate()) {
-    var objDemanda = CriarObjetoDemanda();
-    var jsonDemanda = JSON.stringify(objDemanda);
-  
-    $.ajax({
-      method: "PUT",
-      url: "http://apidemandas.aiur.com.br/v1/AtualizarDemanda",
-      data: jsonDemanda,
-      contentType: "application/json"
-    }).done(function (resposta) {
-      // console.log(resposta);
-      Swal.fire(
-        'Feito!',
-        'Demanda atualizada com sucesso!',
-        'success'
-      );
-    }).fail(function (details, error) {
-      console.log(details);
-      // alert();
-      swal.fire(
-        'Erro',
-        details.responseText,
-        'error'
-      );
-      console.log(error);
-    });
-  }
-}
-
-function ListarDesenvolvedores() {
-  $.ajax({
-    method: "GET",
-    url: "https://apidesenvolvedor.aiur.com.br/V1/ListaDesenvolvedores",
-    dataType: "json"
-  }).done(function (resposta) {
-    // console.log(resposta);
-    CriarSelect(resposta);
-  }).fail(function (details, error) {
-    console.log(details);
-    // alert();
-    swal.fire(
-      'Erro',
-      details.responseText,
-      'error'
-    );
-    console.log(error);
-  });
-}
-function CriarSelect(obj) {
-  var texto;
-
-  $(obj).each(function (index, linha) {
-    texto += '<option value="' + linha.identificador + '">' + linha.identificador + ' - ' + linha.nomeDesenvolvedor + '</option>';
-    // console.log(linha);
-  });
-
-  $("#idDesenvolvedor").html(texto);
-}
+// ===================================================================== //
+// ===== CADASTRAR DEMANDAS ============================================ //
+// ===================================================================== //
 
 function CriarObjetoDemanda() {
   var demanda = {
@@ -189,7 +145,7 @@ function CriarObjetoDemanda() {
     idDesenvolvedor: $("#idDesenvolvedor").val()
 
   };
-  console.log(demanda)
+  console.log(demanda);
   return demanda;
 }
 
@@ -200,7 +156,7 @@ function CadastrarDemanda() {
 
     $.ajax({
       method: "POST",
-      url: "http://apidemandas.aiur.com.br/v1/CadastrarDemanda",
+      url: "http://5.161.81.202:8080/v1/CadastrarDemanda",
       data: jsonDemanda,
       contentType: "application/json"
     }).done(function (resposta) {
@@ -223,10 +179,99 @@ function CadastrarDemanda() {
   }
 }
 
+// ===================================================================== //
+// ===== ATUALIZAR DEMANDAS ============================================ //
+// ===================================================================== //
+
+// Exibir dados nos inputs para atualizar
+function ExibirDadosInput(dados) {
+  EditarDados();
+
+  var linha = $(dados).parents("tr");
+  var coluna = linha.children("td");
+  $("#idDemanda").val($(coluna[0]).text());
+  $("#nomeDemanda").val($(coluna[1]).text());
+  $("#inicioAtendimento").val($(coluna[2]).text());
+  $("#fimAtendimento").val($(coluna[3]).text());
+  $("#tipoDemanda").val($(coluna[4]).text());
+  $("#complexidadeHoras").val($(coluna[5]).text());
+  $("#statusDemanda").val($(coluna[6]).text());
+  $("#idDesenvolvedor").val($(coluna[7]).text());
+}
+
+function AtualizarDemanda(id) {
+  if ($('#formulario-atualizacao-demanda').parsley().validate()) {
+    var objDemanda = CriarObjetoDemanda();
+    var jsonDemanda = JSON.stringify(objDemanda);
+  
+    $.ajax({
+      method: "PUT",
+      url: "http://5.161.81.202:8080/v1/AtualizarDemanda?idDemanda=" + id,
+      data: jsonDemanda,
+      contentType: "application/json"
+    }).done(function (resposta) {
+      // console.log(resposta);
+      Swal.fire(
+        'Feito!',
+        'Demanda atualizada com sucesso!',
+        'success'
+      );
+    }).fail(function (details, error) {
+      console.log(details);
+      // alert();
+      swal.fire(
+        'Erro',
+        details.responseText,
+        'error'
+      );
+      console.log(error);
+    });
+  }
+}
+
+// ===================================================================== //
+// ===== LISTAR DESENVOLVEDORES ======================================== //
+// ===================================================================== //
+
+function ListarDesenvolvedores() {
+  $.ajax({
+    method: "GET",
+    url: "http://5.161.81.202:8030/V1/ListaDesenvolvedores",
+    dataType: "json"
+  }).done(function (resposta) {
+    // console.log(resposta);
+    CriarSelect(resposta);
+  }).fail(function (details, error) {
+    console.log(details);
+    // alert();
+    swal.fire(
+      'Erro',
+      details.responseText,
+      'error'
+    );
+    console.log(error);
+  });
+}
+// Cria select com as opções dos desenvolvedores
+function CriarSelect(obj) {
+  var texto;
+
+  $(obj).each(function (index, linha) {
+    texto += '<option value="' + linha.identificador + '">' + linha.identificador + ' - ' + linha.nomeDesenvolvedor + '</option>';
+    // console.log(linha);
+  });
+
+  $(".listaDev").html(texto);
+}
+
+// ===================================================================== //
+// ===== DELETAR DEMANDAS ============================================== //
+// ===================================================================== //
+
 function DeletarDemanda(id) {
   $.ajax({
     method: "DELETE",
-    url: "http://apidemandas.aiur.com.br/v1/DeletarDemanda?idDemanda=" + id,
+    url: "http://5.161.81.202:8080/v1/DeletarDemanda?idDemanda=" + id,
     dataType: "json"
   }).done(function (resposta) {
     // console.log(resposta);
@@ -245,4 +290,12 @@ function DeletarDemanda(id) {
     );
     console.log(error);
   });
+
+  // Atualizar página após excluir registro
+  location.reload();
 }
+
+// ===================================================================== //
+// ===== AVALIAÇÃO DEMANDAS ============================================ //
+// ===================================================================== //
+

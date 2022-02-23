@@ -15919,7 +15919,8 @@ hr.horizontal {
 
 .table td,
 .table th {
-  white-space: nowrap; }
+  /* white-space: nowrap; */
+  white-space: normal; }
 
 .table.align-items-center td,
 .table.align-items-center th {
@@ -17532,10 +17533,9 @@ pre[class*="language-"] {
     overflow: auto !important; } }
 
 #statusDemanda, #idDesenvolvedor {
-  background-color: #212840;
-}
+  background-color: #212840; }
 
-.modal-footer button.submit {
-  display: none;
-}
+#avaliacao, #editarDemanda, #excluirDemanda{
+  padding: 0.2rem 1.5rem;
+  margin: 0.1rem; }
 /*# sourceMappingURL=material-dashboard.css.map */

@@ -193,20 +193,60 @@
         </div>
       </footer>
     </div>
-    <div class="modal" id="modalDemanda">
+    <div class="modal" id="modalCadastarDemanda">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-transparent">
           <div class="card z-index-2">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1">
                 <header class="modal-header">
-                  <h2 class="text-white font-weight-bolder text-center mb-0" id="tituloModal"></h2>
+                  <h2 class="text-white font-weight-bolder text-center mb-0">Nova Demanda</h2>
                   <button class="btn bg-gradient-danger modal-close m-0 p-2 cancelarDemanda">&#10006;</button>
                 </header>
               </div>
             </div>
             <div class="card-body px-3 py-1">
               <form class="modal-form" id="formulario-cadastro-demanda">
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-text font-weight-bolder m-0 mt-1 p-2">Nome da Demanda:<span>&emsp;&emsp;&nbsp;&nbsp;&nbsp;</span></label>
+                  <input type="text" class="form-control modal-field text-white" required>
+                </div>
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-text font-weight-bolder m-0 mt-1 p-2">Tipo de Demanda:<span>&emsp;&emsp;&emsp;&nbsp;</span></label>
+                  <input type="text" class="form-control modal-field text-white" required>
+                </div>
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-text font-weight-bolder m-0 mt-1 p-2">ID do Desenvolvedor:<span>&emsp;&nbsp;&nbsp;&nbsp;</span></label>
+                  <select class="form-select modal-field text-white listaDev" id="idDesenvolvedor" required></select>
+                </div>
+                <footer class="modal-footer">
+                  <button class="btn bg-gradient-success my-2 mx-1" id="salvarDemanda">Salvar</button>
+                  <button class="btn bg-gradient-danger my-2 mx-1 cancelarDemanda" type="reset">Cancelar</button>
+                </footer>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalAtualizarDemanda">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent">
+          <div class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1">
+                <header class="modal-header">
+                  <h2 class="text-white font-weight-bolder text-center mb-0">Atualizar Demanda</h2>
+                  <button class="btn bg-gradient-danger modal-close m-0 p-2 cancelarDemanda">&#10006;</button>
+                </header>
+              </div>
+            </div>
+            <div class="card-body px-3 py-1">
+              <form class="modal-form" id="formulario-atualizacao-demanda">
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-text font-weight-bolder m-0 mt-1 p-2">ID da Demanda:<span>&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;</span></label>
+                  <input type="text" class="form-control modal-field text-white" id="idDemanda" readonly>
+                </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-text font-weight-bolder m-0 mt-1 p-2">Nome da Demanda:<span>&emsp;&emsp;&nbsp;&nbsp;&nbsp;</span></label>
                   <input type="text" class="form-control modal-field text-white" id="nomeDemanda" required>
@@ -238,11 +278,10 @@
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-text font-weight-bolder m-0 mt-1 p-2">ID do Desenvolvedor:<span>&emsp;&nbsp;&nbsp;&nbsp;</span></label>
-                  <select class="form-select modal-field text-white" id="idDesenvolvedor" required></select>
+                  <select class="form-select modal-field text-white listaDev" id="idDesenvolvedor" required></select>
                 </div>
                 <footer class="modal-footer">
-                  <button class="btn bg-gradient-success my-2 mx-1 submit" id="salvarDemanda">Salvar</button>
-                  <button class="btn bg-gradient-success my-2 mx-1 submit" id="atualizarDemanda">Atualizar</button>
+                  <button class="btn bg-gradient-success my-2 mx-1" id="atualizarDemanda">Atualizar</button>
                   <button class="btn bg-gradient-danger my-2 mx-1 cancelarDemanda" type="reset">Cancelar</button>
                 </footer>
               </form>
@@ -269,6 +308,7 @@
   </script>
   <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
   <script src="../assets/js/demanda.js"></script>
+  <script src="../assets/js/jquery.mask.js"></script>
 
   <script>
     var btn = $("#voltar-ao-topo");
