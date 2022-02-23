@@ -133,16 +133,12 @@ function CriarTabela(obj) {
 // ===== CADASTRAR DEMANDAS ============================================ //
 // ===================================================================== //
 
-function CriarObjetoDemanda() {
+function CriarObjetoCadastrarDemanda() {
   var demanda = {
 
-    nomeDemanda: $("#nomeDemanda").val(),
-    inicioAtendimento: $("#inicioAtendimento").val(),
-    fimAtendimento: $("#fimAtendimento").val(),
-    tipoDemanda: $("#tipoDemanda").val(),
-    complexidadeHoras: $("#complexidadeHoras").val(),
-    statusDemanda: $("#statusDemanda").val(),
-    idDesenvolvedor: $("#idDesenvolvedor").val()
+    nomeDemanda: $("#idCadastroDemanda").val(),
+    tipoDemanda: $("#tipoCadastroDemanda").val(),
+    idDesenvolvedor: $("#idCadastroDesenvolvedor").val()
 
   };
   console.log(demanda);
@@ -151,7 +147,7 @@ function CriarObjetoDemanda() {
 
 function CadastrarDemanda() {
   if ($('#formulario-cadastro-demanda').parsley().validate()) {
-    var objDemanda = CriarObjetoDemanda();
+    var objDemanda = CriarObjetoCadastrarDemanda();
     var jsonDemanda = JSON.stringify(objDemanda);
 
     $.ajax({
@@ -199,9 +195,25 @@ function ExibirDadosInput(dados) {
   $("#idDesenvolvedor").val($(coluna[7]).text());
 }
 
+function CriarObjetoAtualizarDemanda() {
+  var demanda = {
+
+    nomeDemanda: $("#nomeDemanda").val(),
+    inicioAtendimento: $("#inicioAtendimento").val(),
+    fimAtendimento: $("#fimAtendimento").val(),
+    tipoDemanda: $("#tipoDemanda").val(),
+    complexidadeHoras: $("#complexidadeHoras").val(),
+    statusDemanda: $("#statusDemanda").val(),
+    idDesenvolvedor: $("#idDesenvolvedor").val()
+
+  };
+  console.log(demanda);
+  return demanda;
+}
+
 function AtualizarDemanda(id) {
   if ($('#formulario-atualizacao-demanda').parsley().validate()) {
-    var objDemanda = CriarObjetoDemanda();
+    var objDemanda = CriarObjetoAtualizarDemanda();
     var jsonDemanda = JSON.stringify(objDemanda);
   
     $.ajax({
@@ -292,7 +304,7 @@ function DeletarDemanda(id) {
   });
 
   // Atualizar página após excluir registro
-  location.reload();
+  // location.reload();
 }
 
 // ===================================================================== //

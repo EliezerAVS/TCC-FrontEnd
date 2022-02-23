@@ -17532,7 +17532,7 @@ pre[class*="language-"] {
   .ps {
     overflow: auto !important; } }
 
-#statusDemanda, #idDesenvolvedor {
+#statusDemanda, .listaDev {
   background-color: #212840; }
 
 #avaliacao, #editarDemanda, #excluirDemanda{
