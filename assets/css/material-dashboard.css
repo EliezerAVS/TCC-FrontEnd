@@ -2115,7 +2115,7 @@ textarea.form-control-lg {
     width: 1rem;
     height: 1rem;
     margin-top: -0.25rem;
-    background-color: #e91e63;
+    background-color: #49a3f1;
     border: 0;
     border-radius: 1rem;
     -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2127,13 +2127,13 @@ textarea.form-control-lg {
         -webkit-transition: none;
         transition: none; } }
     .form-range::-webkit-slider-thumb:active {
-      background-color: #f9c1d4; }
+      background-color: #49a3f1; }
   .form-range::-webkit-slider-runnable-track {
     width: 100%;
     height: 0.5rem;
     color: transparent;
     cursor: pointer;
-    background-color: #dee2e6;
+    background-color: rgba(255, 255, 255, 0.8);
     border-color: transparent;
     border-radius: 1rem; }
   .form-range::-moz-range-thumb {
@@ -17535,7 +17535,7 @@ pre[class*="language-"] {
 #statusDemanda, .listaDev {
   background-color: #212840; }
 
-#avaliacao, #editarDemanda, #excluirDemanda{
+#avaliacaoDemanda, #editarDemanda, #excluirDemanda{
   padding: 0.2rem 1.5rem;
   margin: 0.1rem; }
 /*# sourceMappingURL=material-dashboard.css.map */
