@@ -2,12 +2,14 @@
 // ===== MODAL ========================================================= //
 // ===================================================================== //
 
+// Chamando método de listar desenvolvedores para exibir nos modais
+ListarDesenvolvedores();
+
 // Modal Cadastrar Demanda
 $(document).ready(function () {
   // Abrir modal na página carregada
   $("#cadastrarDemanda").click(function () {
     $("#modalCadastarDemanda").modal('show');
-    ListarDesenvolvedores();
     
     // Salvar dados cadastro
     $('#formulario-cadastro-demanda').submit(function (e) {
@@ -27,7 +29,6 @@ function EditarDados() {
   $(document).ready(function () {
     // Abrir modal na página carregada
     $("#modalAtualizarDemanda").modal('show');
-    ListarDesenvolvedores();
     
     // Salvar dados atualização
     $('#formulario-atualizacao-demanda').submit(function (e) {
@@ -70,10 +71,9 @@ ChamarTabela();
 function ChamarTabela(){
   $.ajax({
     method: "GET",
-    url: "http://5.161.81.202:8080/v1/ListarDemandas",
+    url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
     dataType: "json"
   }).done(function (resposta) {
-    // console.log(resposta);
     CriarTabela(resposta);
   }).fail(function (details, error) {
     console.log(details);
@@ -82,7 +82,8 @@ function ChamarTabela(){
       position: 'center',
       icon: 'error',
       title: 'Oops...',
-      text: 'Os registros não puderam ser carregados!'
+      text: 'Os registros não puderam ser carregados!',
+      confirmButtonColor: '#4CAF50'
     });
   });
 }
@@ -143,13 +144,19 @@ function CriarTabela(obj) {
       + '<td class="align-middle d-flex flex-column justify-content-lg-center">'
       + '<button class="btn bg-gradient-warning mx-1" id="avaliacaoDemanda" onclick="ExibirDadosInputAvaliar(' + linha.identificador + ')">Avaliação</button>'
       + '<button class="btn bg-gradient-success mx-1" id="editarDemanda" onclick="ExibirDadosInputAtualizar(' + linha.identificador + ')">Editar</button>'
-      + '<button type="submit" class="btn bg-gradient-danger mx-1" id="excluirDemanda" onclick="DeletarDemanda(' + linha.identificador + ')">Excluir</button></td></tr>';
+      + '<button type="submit" class="btn bg-gradient-danger mx-1" id="excluirDemanda" onclick="ConfirmarDelete(' + linha.identificador + ')">Excluir</button></td></tr>';
     // console.log(linha);
   });
 
   texto += "</tbody>";
   $("#registroDemanda").html(texto);
-  $("#registroDemanda").DataTable();
+  $("#registroDemanda").DataTable({
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+    },
+    "order": [[ 0, "asc" ]],
+    "destroy": true
+  });
 }
 
 // ===================================================================== //
@@ -164,7 +171,7 @@ function CriarObjetoCadastrarDemanda() {
     idDesenvolvedor: $("#idCadastroDesenvolvedor").val()
 
   };
-  console.log(demanda);
+  // console.log(demanda);
   return demanda;
 }
 
@@ -175,15 +182,15 @@ function CadastrarDemanda() {
 
     $.ajax({
       method: "POST",
-      url: "http://5.161.81.202:8080/v1/CadastrarDemanda",
+      url: "http://apidemandas.aiur.com.br/v1/CadastrarDemanda",
       data: jsonDemanda,
       contentType: "application/json"
-    }).done(function (resposta) {
-      // console.log(resposta);
+    }).done(function () {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Cadastro realizado com sucesso!'
+        title: 'Cadastro realizado com sucesso!',
+        confirmButtonColor: '#4CAF50'
       });
       $("#modalCadastarDemanda").modal('hide');
       ChamarTabela();
@@ -194,7 +201,8 @@ function CadastrarDemanda() {
         position: 'center',
         icon: 'error',
         title: 'Oops...',
-        text: 'Cadastro não realizado!'
+        text: 'Cadastro não realizado!',
+        confirmButtonColor: '#4CAF50'
       });
     });
   }
@@ -210,10 +218,9 @@ function ExibirDadosInputAtualizar(id) {
 
   $.ajax({
     method: "GET",
-    url: "http://5.161.81.202:8080/v1/ListarDemandas",
+    url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
     dataType: "json"
   }).done(function (resposta) {
-    // console.log(resposta);
     PegarDados(resposta);
   }).fail(function (details, error) {
     console.log(details);
@@ -222,7 +229,8 @@ function ExibirDadosInputAtualizar(id) {
       position: 'center',
       icon: 'error',
       title: 'Oops...',
-      text: 'Os registros não puderam ser carregados!'
+      text: 'Os registros não puderam ser carregados!',
+      confirmButtonColor: '#4CAF50'
     });
   });
 
@@ -236,8 +244,7 @@ function ExibirDadosInputAtualizar(id) {
         $("#tipoDemanda").val(linha.tipoDemanda);
         $("#complexidadeHoras").val(linha.complexidadeHoras);
         $("#statusDemanda").val(linha.statusDemanda);
-        // $("#idDesenvolvedor").val(linha.idDesenvolvedor);
-        $("#idDesenvolvedor option[value=" + linha.idDesenvolvedor + "]").attr('selected', 'selected');
+        $("#idDesenvolvedor").val(linha.idDesenvolvedor);
       }
     });
   }
@@ -256,7 +263,15 @@ function CriarObjetoAtualizarDemanda() {
     idDesenvolvedor: $("#idDesenvolvedor").val()
 
   };
-  console.log(demanda);
+
+  if(demanda.inicioAtendimento == ""){
+    demanda.inicioAtendimento = null
+  }
+  if(demanda.fimAtendimento == ""){
+    demanda.fimAtendimento = null
+  }
+
+  // console.log(demanda);
   return demanda;
 }
 
@@ -267,15 +282,15 @@ function AtualizarDemanda() {
   
     $.ajax({
       method: "PUT",
-      url: "http://5.161.81.202:8080/v1/AtualizarDemanda",
+      url: "http://apidemandas.aiur.com.br/v1/AtualizarDemanda",
       data: jsonDemanda,
       contentType: "application/json"
-    }).done(function (resposta) {
-      // console.log(resposta);
+    }).done(function () {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Atualização realizada com sucesso!'
+        title: 'Atualização realizada com sucesso!',
+        confirmButtonColor: '#4CAF50'
       });
       $("#modalAtualizarDemanda").modal('hide');
       ChamarTabela();
@@ -286,7 +301,8 @@ function AtualizarDemanda() {
         position: 'center',
         icon: 'error',
         title: 'Oops...',
-        text: 'Atualização não realizada!'
+        text: 'Atualização não realizada!',
+        confirmButtonColor: '#4CAF50'
       });
     });
   }
@@ -299,10 +315,9 @@ function AtualizarDemanda() {
 function ListarDesenvolvedores() {
   $.ajax({
     method: "GET",
-    url: "http://5.161.81.202:8030/V1/ListaDesenvolvedores",
+    url: "https://apidesenvolvedor.aiur.com.br/V1/ListaDesenvolvedores",
     dataType: "json"
   }).done(function (resposta) {
-    // console.log(resposta);
     CriarSelectDev(resposta);
   }).fail(function (details, error) {
     console.log(details);
@@ -311,7 +326,8 @@ function ListarDesenvolvedores() {
       position: 'center',
       icon: 'error',
       title: 'Oops...',
-      text: 'A lista de desenvolvedores não pode ser carregada!'
+      text: 'A lista de desenvolvedores não pode ser carregada!',
+      confirmButtonColor: '#4CAF50'
     });
   });
 }
@@ -321,7 +337,6 @@ function CriarSelectDev(obj) {
 
   $(obj).each(function (index, linha) {
     texto += '<option value="' + linha.identificador + '">' + linha.identificador + ' - ' + linha.nomeDesenvolvedor + '</option>';
-    // console.log(linha);
   });
 
   $(".listaDev").html(texto);
@@ -331,29 +346,33 @@ function CriarSelectDev(obj) {
 // ===== DELETAR DEMANDAS ============================================== //
 // ===================================================================== //
 
+function ConfirmarDelete(id) {
+  Swal.fire({
+    position: 'center',
+    title: 'Tem certeza que quer excluir?',
+    text: "Você não poderá reverter essa ação!",
+    icon: 'warning',
+    confirmButtonText: 'Sim, deletar!',
+    confirmButtonColor: '#4CAF50',
+    showCancelButton: 'Cancelar',
+    cancelButtonColor: '#F44335'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      DeletarDemanda(id);
+    }
+  });
+}
+
 function DeletarDemanda(id) {
   $.ajax({
     method: "DELETE",
-    url: "http://5.161.81.202:8080/v1/DeletarDemanda?idDemanda=" + id,
-    dataType: "json"
-  }).done(function (resposta) {
-    // console.log(resposta);
+    url: "http://apidemandas.aiur.com.br/v1/DeletarDemanda?idDemanda=" + id,
+  }).done(function () {
     Swal.fire({
-      title: 'Tem certeza que quer excluir?',
-      text: "Você não poderá reverter essa ação!",
-      icon: 'warning',
-      showCancelButton: 'Cancelar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sim, deletar!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Demanda deletada com sucesso!'
-        });
-      }
+      position: 'center',
+      icon: 'success',
+      title: 'Demanda deletada com sucesso!',
+      confirmButtonColor: '#4CAF50'
     });
     ChamarTabela();
   }).fail(function (details, error) {
@@ -363,7 +382,8 @@ function DeletarDemanda(id) {
       position: 'center',
       icon: 'error',
       title: 'Oops...',
-      text: 'Falha ao excluir registro!'
+      text: 'Falha ao excluir registro!',
+      confirmButtonColor: '#4CAF50'
     });
   });
 }
@@ -399,13 +419,14 @@ $("#qualidadeTecnicaDev").on('mousemove', function() {
 function CriarObjetoAvaliarDemanda() {
   var avaliacao = {
 
-    idDemanda: $("#idDemandaAvaliacao").val(),
-    qualidadeAtendimento: $("#qualidadeAtendimento").val(),
-    tempoAtendimento: $("#tempoAtendimento").val(),
-    qualidadeTecnicaDesenvolvedor: $("#qualidadeTecnicaDev").val()
+    idDemanda: parseInt($("#idDemandaAvaliacao").val()),
+    qualidadeAtendimento: parseInt($("#qualidadeAtendimento").val()),
+    tempoAtendimento: parseInt($("#tempoAtendimento").val()),
+    qualidadeTecnicaDesenvolvedor: parseInt($("#qualidadeTecnicaDev").val()),
+    identificador: 1
 
   };
-  console.log(avaliacao);
+  // console.log(avaliacao);
   return avaliacao;
 }
 
@@ -419,15 +440,14 @@ function AvaliarDemanda() {
       url: "https://apiavaliacao.aiur.com.br/InserirAvaliacao",
       data: jsonAvaliacao,
       contentType: "application/json"
-    }).done(function (resposta) {
-      // console.log(resposta);
+    }).done(function () {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Avaliação realizada com sucesso!'
+        title: 'Avaliação realizada com sucesso!',
+        confirmButtonColor: '#4CAF50'
       });
       $("#modalAvaliarDemanda").modal('hide');
-      ChamarTabela();
     }).fail(function (details, error) {
       console.log(details);
       console.log(error);
@@ -435,7 +455,8 @@ function AvaliarDemanda() {
         position: 'center',
         icon: 'error',
         title: 'Oops...',
-        text: 'Avaliação não realizada!'
+        text: 'Avaliação não realizada!',
+        confirmButtonColor: '#4CAF50'
       });
     });
   }

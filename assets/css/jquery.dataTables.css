@@ -395,6 +395,7 @@ table.dataTable td {
   border:1px solid #aaa;
   border-radius:3px;
   padding:5px;
+  color: #fff;
   background-color:transparent;
   margin-left:3px
 }
@@ -519,7 +520,7 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_info,
 .dataTables_wrapper .dataTables_processing,
 .dataTables_wrapper .dataTables_paginate {
-  color:#fff
+  color:rgba(255, 255, 255, 0.8)
 }
 
 .dataTables_wrapper .dataTables_scroll {
