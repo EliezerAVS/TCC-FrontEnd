@@ -62,19 +62,32 @@ function ModalAvaliarDemanda() {
   });
 }
 
+// Modal Demandas Sem Avaliação 
+$(document).ready(function () {
+  // Abrir modal na página carregada
+  $("#semAvaliacao").click(function () {
+    $("#modalSemAvaliacao").modal('show');
+  });
+
+  // Fechar modal clicando no botão
+  $(".cancelar").click(function () {
+    $("#modalSemAvaliacao").modal('hide');
+  });
+});
+
 // ===================================================================== //
 // ===== LISTAR DEMANDAS =============================================== //
 // ===================================================================== //
 
-ChamarTabela();
+ChamarTabelaDemandas();
 
-function ChamarTabela(){
+function ChamarTabelaDemandas(){
   $.ajax({
     method: "GET",
     url: "http://apidemandas.aiur.com.br/v1/ListarDemandas",
     dataType: "json"
   }).done(function (resposta) {
-    CriarTabela(resposta);
+    CriarTabelaDemandas(resposta);
   }).fail(function (details, error) {
     console.log(details);
     console.log(error);
@@ -87,7 +100,7 @@ function ChamarTabela(){
     });
   });
 }
-function CriarTabela(obj) {
+function CriarTabelaDemandas(obj) {
   var texto = '<thead><tr>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID da Demanda</th>'
     + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome da Demanda</th>'
@@ -142,10 +155,12 @@ function CriarTabela(obj) {
       + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
       + '<p class="text-xs text-secondary mb-0">' + linha.idDesenvolvedor + '</p></div></div></td>'
       + '<td class="align-middle d-flex flex-column justify-content-lg-center">'
-      + '<button class="btn bg-gradient-warning mx-1" id="avaliacaoDemanda" onclick="ExibirDadosInputAvaliar(' + linha.identificador + ')">Avaliação</button>'
-      + '<button class="btn bg-gradient-success mx-1" id="editarDemanda" onclick="ExibirDadosInputAtualizar(' + linha.identificador + ')">Editar</button>'
-      + '<button type="submit" class="btn bg-gradient-danger mx-1" id="excluirDemanda" onclick="ConfirmarDelete(' + linha.identificador + ')">Excluir</button></td></tr>';
-    // console.log(linha);
+      + '<button class="btn bg-gradient-warning mx-1" id="avaliacaoDemanda" onclick="ExibirDadosInputAvaliar(' + linha.identificador + ')">'
+        +'Avaliação<span>&nbsp;&nbsp;</span><i class="material-icons opacity-10">star</i></button>'
+      + '<button class="btn bg-gradient-success mx-1" id="editarDemanda" onclick="ExibirDadosInputAtualizar(' + linha.identificador + ')">'
+        + 'Editar<span>&nbsp;&nbsp;</span><i class="material-icons opacity-10">edit</i></button>'
+      + '<button type="submit" class="btn bg-gradient-danger mx-1" id="excluirDemanda" onclick="ConfirmarDelete(' + linha.identificador + ')">'
+        + 'Excluir<span>&nbsp;&nbsp;</span><i class="material-icons opacity-10">delete</i></button></td></tr>';
   });
 
   texto += "</tbody>";
@@ -193,7 +208,7 @@ function CadastrarDemanda() {
         confirmButtonColor: '#4CAF50'
       });
       $("#modalCadastarDemanda").modal('hide');
-      ChamarTabela();
+      ChamarTabelaDemandas();
     }).fail(function (details, error) {
       console.log(details);
       console.log(error);
@@ -293,7 +308,7 @@ function AtualizarDemanda() {
         confirmButtonColor: '#4CAF50'
       });
       $("#modalAtualizarDemanda").modal('hide');
-      ChamarTabela();
+      ChamarTabelaDemandas();
     }).fail(function (details, error) {
       console.log(details);
       console.log(error);
@@ -374,7 +389,7 @@ function DeletarDemanda(id) {
       title: 'Demanda deletada com sucesso!',
       confirmButtonColor: '#4CAF50'
     });
-    ChamarTabela();
+    ChamarTabelaDemandas();
   }).fail(function (details, error) {
     console.log(details);
     console.log(error);
@@ -460,4 +475,51 @@ function AvaliarDemanda() {
       });
     });
   }
+}
+
+// ===================================================================== //
+// ===== LISTAR DEMANDAS SEM AVALIAÇÃO ================================= //
+// ===================================================================== //
+
+function ChamarTabelaSemAvaliacao(){
+  $.ajax({
+    method: "GET",
+    url: "",
+    dataType: "json"
+  }).done(function (resposta) {
+    CriarTabelaSemAvaliacao(resposta);
+  }).fail(function (details, error) {
+    console.log(details);
+    console.log(error);
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Os registros não puderam ser carregados!',
+      confirmButtonColor: '#4CAF50'
+    });
+  });
+}
+function CriarTabelaSemAvaliacao(obj) {
+  var texto = '<thead><tr>'
+    + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID da Demanda</th>'
+    + '<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome da Demanda</th>'
+    + '</tr></thead><tbody>';
+
+  $(obj).each(function (index, linha) {
+    texto += '<tr><td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
+      + '<p class="mb-0 text-sm">' + linha.identificador + '</p></div></div></td>'
+      + '<td><div class="d-flex px-2 py-1"><div class="d-flex flex-column justify-content-center">'
+      + '<p class="mb-0 text-sm">' + linha.nomeDemanda + '</p></div></div></td></tr>'
+  });
+
+  texto += "</tbody>";
+  $("#registroSemAvaliacao").html(texto);
+  $("#registroSemAvaliacao").DataTable({
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+    },
+    "order": [[ 0, "asc" ]],
+    "destroy": true
+  });
 }

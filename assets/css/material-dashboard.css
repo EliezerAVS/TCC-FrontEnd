@@ -17536,6 +17536,9 @@ pre[class*="language-"] {
   background-color: #212840; }
 
 #avaliacaoDemanda, #editarDemanda, #excluirDemanda{
-  padding: 0.2rem 1.5rem;
-  margin: 0.1rem; }
+  padding: 0.2rem 0.35rem;
+  margin: 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
 /*# sourceMappingURL=material-dashboard.css.map */
